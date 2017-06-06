@@ -2,8 +2,9 @@
 # can be used. For a detailed explenation of all the options please
 # reade README.rst.
 
-set(ARDUINO_DEFAULT_BOARD diecimila) # Default Board ID, when not specified
-set(ARDUINO_DEFAULT_PORT /dev/ttyUSB0) # Default Port, when not specified
+add_definitions(-DARDUINO_ARCH_AVR=1)
+set(ARDUINO_DEFAULT_BOARD micro) # Default Board ID, when not specified
+set(ARDUINO_DEFAULT_PORT com5) # Default Port, when not specified
 
 
 #====================================================================#
