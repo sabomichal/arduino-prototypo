@@ -5,11 +5,13 @@
 #ifndef ARDUINOEXAMPLE_ROBOT_H
 #define ARDUINOEXAMPLE_ROBOT_H
 
-#include "IRobot.h"
+#include "CarBot.h"
 #include "Ultrasonic.h"
 #include "Servo.h"
+#include "MovingStrategy.h"
+#include "AutonomousStrategy.h"
 
-struct RobotConfig {
+struct Config {
 public:
     struct L293Pinout {
         uint8_t in1;
@@ -28,17 +30,20 @@ public:
     } sg90Pinout;
 };
 
-class CarBot : IRobot {
-
+class Prototypo : public CarBot {
 private:
+    static const uint8_t POSITION_MIN = 0;
+    static const uint8_t POSITION_MAX = 180;
+
     Servo servo;
     Ultrasonic ultrasonic;
-    RobotConfig robotConfig;
+    Config config;
+    AutonomousStrategy movingStrategy;
 
 public:
-    CarBot(RobotConfig &robotConfig);
+    Prototypo(Config &config);
 
-    virtual ~CarBot();
+    virtual ~Prototypo();
 
     void setup();
 
@@ -53,6 +58,12 @@ public:
     void lookAt(uint8_t position) override;
 
     int readDistance() override;
+
+    uint8_t getPositionMin() override;
+
+    uint8_t getPositionMax() override;
+
+    void move();
 };
 
 #endif //ARDUINOEXAMPLE_ROBOT_H

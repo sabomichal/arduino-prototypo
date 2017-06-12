@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-struct IRobot {
+struct CarBot {
     /**
      * Turn left
      */
@@ -28,10 +28,14 @@ struct IRobot {
     virtual void goBackward()= 0;
 
     /**
-     * Turn servo to the specified position <0,180>
+     * Turn servo to the specified position <getPositionMin(),getPositionMax>
      * @param position
      */
     virtual void lookAt(uint8_t position)= 0;
+
+    virtual uint8_t getPositionMin()= 0;
+
+    virtual uint8_t getPositionMax()= 0;
 
     /**
      * Read the distance

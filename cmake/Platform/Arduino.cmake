@@ -1856,6 +1856,7 @@ function(find_sources VAR_NAME LIB_PATH RECURSE)
             ${LIB_PATH}/*.c
             ${LIB_PATH}/*.cc
             ${LIB_PATH}/*.cxx
+            ${LIB_PATH}/*.S
             ${LIB_PATH}/*.h
             ${LIB_PATH}/*.hh
             ${LIB_PATH}/*.hxx)

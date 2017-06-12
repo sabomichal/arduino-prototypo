@@ -8,14 +8,14 @@ link_directories(${CMAKE_SOURCE_DIR}/libraries)
 #link_directories(${ARDUINO_SDK}/libraries)
 
 #====================================================================#
-# IRobot static library
+# CarBot static library
 #====================================================================#
 generate_arduino_library(carbot_lib
-        SRCS CarBot.cpp
-        HDRS CarBot.h IRobot.h)
+        SRCS Prototypo.cpp AutonomousStrategy.cpp
+        HDRS Prototypo.h CarBot.h MovingStrategy.h AutonomousStrategy.h)
 
 #====================================================================#
-# CarBot firmware
+# Prototypo firmware
 #====================================================================#
 generate_arduino_firmware(carbot
         SRCS main.cpp

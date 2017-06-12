@@ -26,4 +26,4 @@ set(ARDUINO_DEFAULT_PORT com4) # Default Port, when not specified
 print_board_list()
 print_programmer_list()
 
-add_subdirectory(carbot)   #add the example directory into build
+add_subdirectory(prototypo)   #add the example directory into build
