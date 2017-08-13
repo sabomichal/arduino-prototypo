@@ -1,11 +1,10 @@
 #====================================================================#
 #  Dependencies                                                      #
 #====================================================================#
-set(Servo_RECURSE True)
-set(Ultrasonic_RECURSE True)
-#include_directories(${CMAKE_SOURCE_DIR}/libraries)
+#set(Servo_RECURSE True)
+#set(Ultrasonic_RECURSE True)
+#set(VarSpeedServo_RECURSE True)
 link_directories(${CMAKE_SOURCE_DIR}/libraries)
-#link_directories(${ARDUINO_SDK}/libraries)
 
 #====================================================================#
 # CarBot static library
@@ -20,4 +19,4 @@ generate_arduino_library(carbot_lib
 generate_arduino_firmware(carbot
         SRCS main.cpp
         LIBS carbot_lib
-        ARDLIBS Ultrasonic Servo)
+        ARDLIBS Ultrasonic VarSpeedServo)

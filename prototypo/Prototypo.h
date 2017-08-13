@@ -7,7 +7,7 @@
 
 #include "CarBot.h"
 #include "Ultrasonic.h"
-#include "Servo.h"
+#include "VarSpeedServo.h"
 #include "MovingStrategy.h"
 #include "AutonomousStrategy.h"
 
@@ -34,14 +34,15 @@ class Prototypo : public CarBot {
 private:
     static const uint8_t POSITION_MIN = 0;
     static const uint8_t POSITION_MAX = 180;
+    static const uint8_t SAFE_DISTANCE = 10;
 
-    Servo servo;
+    VarSpeedServo servo;
     Ultrasonic ultrasonic;
     Config config;
-    AutonomousStrategy movingStrategy;
+    MovingStrategy *movingStrategy;
 
 public:
-    Prototypo(Config &config);
+    Prototypo(Config&, MovingStrategy&);
 
     virtual ~Prototypo();
 
@@ -55,13 +56,21 @@ public:
 
     void goBackward() override;
 
-    void lookAt(uint8_t position) override;
+    void stop() override;
+
+    void writeServoPosition(uint8_t) override;
+
+    void writeServoPosition(uint8_t, uint8_t, bool) override;
+
+    uint8_t readServoPosition() override;
 
     int readDistance() override;
 
     uint8_t getPositionMin() override;
 
     uint8_t getPositionMax() override;
+
+    uint8_t getSafeDistance() override;
 
     void move();
 };

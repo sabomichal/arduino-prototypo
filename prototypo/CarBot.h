@@ -28,14 +28,28 @@ struct CarBot {
     virtual void goBackward()= 0;
 
     /**
+     * Stop moving
+     */
+    virtual void stop()= 0;
+
+    /**
      * Turn servo to the specified position <getPositionMin(),getPositionMax>
      * @param position
      */
-    virtual void lookAt(uint8_t position)= 0;
+    virtual void writeServoPosition(uint8_t)= 0;
+
+    virtual void writeServoPosition(uint8_t position, uint8_t speed, bool wait)= 0;
+
+    /**
+     * Get servo position
+     */
+    virtual uint8_t readServoPosition()= 0;
 
     virtual uint8_t getPositionMin()= 0;
 
     virtual uint8_t getPositionMax()= 0;
+
+    virtual uint8_t getSafeDistance()= 0;
 
     /**
      * Read the distance

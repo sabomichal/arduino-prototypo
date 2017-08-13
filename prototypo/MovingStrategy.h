@@ -8,7 +8,7 @@
 #include "CarBot.h"
 
 struct MovingStrategy {
-    virtual void move(CarBot& carBot)= 0;
+    virtual void move(CarBot&)= 0;
 };
 
 #endif //ARDUINOEXAMPLE_IALGORITHM_H

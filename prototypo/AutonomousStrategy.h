@@ -5,15 +5,19 @@
 #ifndef ARDUINOEXAMPLE_ALGORITHM_H
 #define ARDUINOEXAMPLE_ALGORITHM_H
 
+static const double DEGREE_TO_DELAY_CONSTANT = 4.45;
+
 #include "MovingStrategy.h"
 #include "CarBot.h"
 
 class AutonomousStrategy : public MovingStrategy {
 public:
-    void move(CarBot& carBot) override;
+    void move(CarBot&) override;
 
 private:
-    unsigned long positionToDelay(int position) const;
+    uint8_t getMaxDistancePosition(CarBot&) const;
+
+    void turnToPosition(CarBot&, uint8_t);
 };
 
 

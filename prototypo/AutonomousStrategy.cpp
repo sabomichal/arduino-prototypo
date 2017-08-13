@@ -12,50 +12,64 @@
 #include "AutonomousStrategy.h"
 
 void AutonomousStrategy::move(CarBot& carBot) {
-    //carBot.lookAt(90);
-    //delay(1000);
+    // get max distance position
+    auto position = getMaxDistancePosition(carBot);
+    Serial.print("Max distance position: ");
+    Serial.println(position);
 
-    /*auto position = 0;
-    auto maxDistance = 0;
-    for (uint8_t i = carBot.getPositionMin(); i < carBot.getPositionMax(); i++) {
-        carBot.lookAt(i);
-        delay(10);
-        auto distance = carBot.readDistance();
-        if (distance > maxDistance) {
-            maxDistance = distance;
-            position = i;
-        }
-    }*/
+    // turn to this position
+    turnToPosition(carBot, position);
+    // look forward
+    carBot.writeServoPosition(carBot.getPositionMax() / 2, 255, false);
 
-    /*if (position < 90) {
-        carBot.turnLeft();
-        delay(positionToDelay(90 - position));
-    } else if (position > 90) {
-        carBot.turnRight();
-        delay(positionToDelay(position - 90));
-    } else {
-        carBot.goForward();
-    }
-    delay(1000);*/
-    //carBot.goForward();
-    /*auto distance = carBot.readDistance();
-    Serial.println(distance);
-    if (distance < 10) {
-        carBot.turnLeft();
-        delay(1000);
-    //    Serial.print("Distance: ");
-        Serial.println("turn left");
-    //    Serial.println("cm");
-    } else {
-        carBot.goForward();
-        Serial.println("go forward");
-    }*/
+    // go forward
+    carBot.goForward();
+    delay(500);
 
-    auto distance = carBot.readDistance();
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.println("cm");
-    delay(10);
+    // until the distance is safe
+    auto distance = 0;
+    do {
+        distance = carBot.readDistance();
+        Serial.print("Distance in front: ");
+        Serial.println(distance);
+        delay(200);
+    } while (distance > carBot.getSafeDistance());
+    carBot.stop();
 }
 
-unsigned long AutonomousStrategy::positionToDelay(int position) const { return (unsigned long) (position * 100); }
+uint8_t AutonomousStrategy::getMaxDistancePosition(CarBot &carBot) const {
+    auto maxDistancePosition = 0;
+    // auto currentPosition = carBot.readServoPosition();
+    auto maxDistance = 0;
+    for (auto i = carBot.getPositionMin(); i <= carBot.getPositionMax(); i+=10) {
+        carBot.writeServoPosition(i);
+        auto distance = carBot.readDistance();
+        Serial.print("Max distance candidate: ");
+        Serial.println(distance);
+        if (distance > maxDistance) {
+            maxDistance = distance;
+            maxDistancePosition = i;
+        }
+    }
+    return (uint8_t) maxDistancePosition;
+}
+
+void AutonomousStrategy::turnToPosition(CarBot& carBot, uint8_t position) {
+    if (position < (carBot.getPositionMax() / 2)) {
+        auto actualDelay = (unsigned long) ((carBot.getPositionMax() / 2 - position) * DEGREE_TO_DELAY_CONSTANT);
+        Serial.print("Turning right with delay: ");
+        Serial.println(actualDelay);
+        carBot.turnRight();
+        delay(actualDelay);
+    } else if (position > (carBot.getPositionMax() / 2)) {
+        auto actualDelay = (unsigned long) ((position - carBot.getPositionMax() / 2) * DEGREE_TO_DELAY_CONSTANT);
+        Serial.print("Turning left with delay: ");
+        Serial.println(actualDelay);
+        carBot.turnLeft();
+        delay(actualDelay);
+    } else {
+        // do nothing
+        Serial.print("Not turning");
+    }
+    carBot.stop();
+}

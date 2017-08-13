@@ -41,12 +41,33 @@ void Prototypo::goBackward() {
     digitalWrite(config.l293Pinout.in4, LOW);
 }
 
-void Prototypo::lookAt(uint8_t position) {
-    servo.write(position);
+void Prototypo::stop() {
+    // motor A stop
+    digitalWrite(config.l293Pinout.in1, LOW);
+    digitalWrite(config.l293Pinout.in2, LOW);
+    // motor B stop
+    digitalWrite(config.l293Pinout.in3, LOW);
+    digitalWrite(config.l293Pinout.in4, LOW);
+}
+
+void Prototypo::writeServoPosition(uint8_t position) {
+    // move to position degrees, use a speed of 30, wait until move is complete
+    servo.write(position, 30, true);
+}
+
+void Prototypo::writeServoPosition(uint8_t position, uint8_t speed, bool wait) {
+    // move to position degrees, use a speed of 30, wait until move is complete
+    servo.write(position, speed, wait);
+}
+
+uint8_t Prototypo::readServoPosition() {
+    return (uint8_t) servo.read();
 }
 
 int Prototypo::readDistance() {
-    return ultrasonic.distanceRead(CM);
+    auto d1 = ultrasonic.distanceRead(CM);
+    auto d2 = ultrasonic.distanceRead(CM);
+    return (d1 + d2) / 2;
 }
 
 void Prototypo::setup() {
@@ -63,12 +84,13 @@ void Prototypo::setup() {
 }
 
 void Prototypo::move() {
-    movingStrategy.move(*this);
+    movingStrategy->move(*this);
 }
 
-Prototypo::Prototypo(Config &config) : ultrasonic{config.hcsr04Pinout.trigPin,
-                                                        config.hcsr04Pinout.echoPin} {
+Prototypo::Prototypo(Config &config, MovingStrategy &movingStrategy) : ultrasonic{config.hcsr04Pinout.trigPin,
+                                                  config.hcsr04Pinout.echoPin} {
     this->config = config;
+    this->movingStrategy = &movingStrategy;
 }
 
 Prototypo::~Prototypo() {
@@ -81,4 +103,8 @@ uint8_t Prototypo::getPositionMin() {
 
 uint8_t Prototypo::getPositionMax() {
     return POSITION_MAX;
+}
+
+uint8_t Prototypo::getSafeDistance() {
+    return SAFE_DISTANCE;
 }
